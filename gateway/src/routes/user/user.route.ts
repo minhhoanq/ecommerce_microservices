@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { clientUser } from "../../client";
+import { clientUser } from "../../start_server_grpc";
 import { auth } from "../../auths/authUtil";
 
 const router = express.Router();
