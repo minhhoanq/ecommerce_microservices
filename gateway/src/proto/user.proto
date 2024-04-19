@@ -2,7 +2,10 @@ syntax = "proto3";
 
 service UserService {
     rpc GetUsers(Emty) returns (User) {}
-    rpc RegisterUser(UserRegister) returns (RegisterResponse) {}
+    rpc RegisterUser(UserRegister) returns (UserResponse) {}
+    rpc LoginUser(UserLogin) returns (UserResponse) {}
+    rpc LogoutUser(Session) returns (Boolen) {}
+    rpc RefreshTokenUser(UserRefreshTokenReq) returns (UserRefreshTokenRes) {}
 
     rpc GetSessionUser(SessionRequest) returns (Session) {}
 
@@ -10,6 +13,10 @@ service UserService {
 }
 
 message Emty {}
+
+message Boolen {
+    string Boolen = 1;
+}
 
 message UserRegister {
     string email = 1;
@@ -23,7 +30,7 @@ message UserRegister {
     string client_ip = 9;
 }
 
-message UserRegisterRes {
+message UserPayloadResponse {
     int32 id = 1;
     string email = 2;
 }
@@ -33,8 +40,33 @@ message Tokens {
     string refresh_token = 2;
 }
 
-message RegisterResponse {
-    UserRegisterRes userRegisterRes = 1;
+message UserResponse {
+    UserPayloadResponse user = 1;
+    Tokens tokens = 2;
+}
+
+message UserLogin {
+    string email = 1;
+    string password = 2;
+    string client_agent = 3;
+    string client_ip = 4;
+}
+
+message UserRefreshTokenReq {
+    decode user = 1;
+    string refresh_token = 2;
+    Session session = 3;
+    string client_agent = 4;
+    string client_ip = 5;
+}
+
+message UserResultRT {
+    int32 user_id = 1;
+    string email = 2;
+}
+
+message UserRefreshTokenRes {
+    UserResultRT user = 1;
     Tokens tokens = 2;
 }
 

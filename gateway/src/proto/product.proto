@@ -13,6 +13,7 @@ message ProductCreateRequest {
     string product_thumb = 5;
     int32 product_quantity = 6;
     ProductAttributes product_attributes = 7;
+    int32 product_shop = 8;
 }
 
 message ProductAttributes {
