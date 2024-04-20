@@ -2,14 +2,28 @@ syntax = "proto3";
 
 service UserService {
     rpc GetUsers(Emty) returns (User) {}
-    rpc RegisterUser(UserRegister) returns (RegisterResponse) {}
+    rpc RegisterUser(UserRegister) returns (UserResponse) {}
+    rpc LoginUser(UserLogin) returns (UserResponse) {}
+    rpc LogoutUser(Session) returns (Boolen) {}
+    rpc RefreshTokenUser(UserRefreshTokenReq) returns (UserRefreshTokenRes) {}
 
     rpc GetSessionUser(SessionRequest) returns (Session) {}
 
     rpc DecodeToken(TokenRequest) returns (decode) {}
+
+    //admin
+    rpc CreateRole(RoleReq) returns (Role) {}
+    rpc CreateResource(ResourceReq) returns (Resource) {}
+    rpc CreateRoleResource(RoleResource) returns (RoleResource) {}
+
+    rpc GetAccess(GetAccessReq) returns (GrantList) {}
 }
 
 message Emty {}
+
+message Boolen {
+    string Boolen = 1;
+}
 
 message UserRegister {
     string email = 1;
@@ -23,7 +37,7 @@ message UserRegister {
     string client_ip = 9;
 }
 
-message UserRegisterRes {
+message UserPayloadResponse {
     int32 id = 1;
     string email = 2;
 }
@@ -33,8 +47,33 @@ message Tokens {
     string refresh_token = 2;
 }
 
-message RegisterResponse {
-    UserRegisterRes userRegisterRes = 1;
+message UserResponse {
+    UserPayloadResponse user = 1;
+    Tokens tokens = 2;
+}
+
+message UserLogin {
+    string email = 1;
+    string password = 2;
+    string client_agent = 3;
+    string client_ip = 4;
+}
+
+message UserRefreshTokenReq {
+    decode user = 1;
+    string refresh_token = 2;
+    Session session = 3;
+    string client_agent = 4;
+    string client_ip = 5;
+}
+
+message UserResultRT {
+    int32 user_id = 1;
+    string email = 2;
+}
+
+message UserRefreshTokenRes {
+    UserResultRT user = 1;
     Tokens tokens = 2;
 }
 
@@ -90,4 +129,53 @@ message decode {
     string email = 3;
     int32 iat = 4;
     int32 exp = 5;
+}
+
+message RoleReq {
+    string name = 1;
+}
+
+message Role {
+    int32 id = 1;
+    string name = 2;
+    string created_at = 3;
+    string updated_at = 4;
+}
+
+message ResourceReq {
+    string name = 1;
+    string slug = 2;
+    string desc = 3;
+}
+
+message Resource {
+    int32 id = 1;
+    string name = 2;
+    string slug = 3;
+    string desc = 4;
+    string created_at = 5;
+    string updated_at = 6;
+}
+
+message RoleResource {
+    int32 role_id = 1;
+    int32 resource_id = 2;
+    string action = 3;
+    string attributes = 4;
+}
+
+message GetAccessReq {
+    int32 role_id = 1;
+    string resource = 2;
+}
+
+message GetAccess {
+    string role = 1;
+    string resource = 2;
+    string action = 3;
+    string attributes = 4;
+}
+
+message GrantList {
+    repeated GetAccess grantList = 1;
 }

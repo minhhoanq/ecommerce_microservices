@@ -13,6 +13,7 @@ interface RefreshTokenData {
 }
 
 export const decode_token = async (token: string, key: string) => {
+    // console.log("check token:", token + " | " + key);
     const decode_user = <AccessTokenData>await JWT.verify(token, key);
     return decode_user;
 };
