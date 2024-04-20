@@ -1,7 +1,8 @@
+import { RegisterUser } from "../dto/user.dto";
 import { IUserRepo } from "../interfaces/user.repo.interface";
 
 export class UserRepository implements IUserRepo {
-    create(user: any): Promise<any> {
+    create(user: RegisterUser): Promise<any> {
         throw new Error("Method not implemented.");
     }
     update(user: any): Promise<any> {

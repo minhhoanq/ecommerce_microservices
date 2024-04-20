@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+    IsBoolean,
+    IsEmail,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+} from "class-validator";
 
 export class RegisterUser {
     @IsNotEmpty()
@@ -33,4 +39,50 @@ export class LoginUser {
     @IsNotEmpty()
     @IsString()
     password: string;
+}
+
+export class SessionUser {
+    @IsNotEmpty()
+    @IsNumber()
+    id: number;
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    refresh_token: string;
+
+    @IsNotEmpty()
+    @IsString()
+    client_id: string;
+
+    @IsNotEmpty()
+    @IsString()
+    client_agent: string;
+
+    @IsNotEmpty()
+    @IsBoolean()
+    is_block: boolean;
+
+    @IsNotEmpty()
+    @IsString()
+    private_key: string;
+
+    @IsNotEmpty()
+    @IsString()
+    public_key: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    expired_at: number;
+
+    @IsNotEmpty()
+    @IsString()
+    created_at?: string;
+
+    @IsNotEmpty()
+    @IsString()
+    updated_at?: string;
 }
