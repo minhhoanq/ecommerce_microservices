@@ -9,17 +9,14 @@ export const GrantAccess = (action: string, resource: string) => {
             const getAccessListAsync = promisify(clientUser.GetAccess).bind(
                 clientUser
             );
-            console.log("check 1", action);
             const payload = {
-                role_id: 1,
+                role_id: req.user.role_id,
                 resource: resource,
             };
             const access = await getAccessListAsync(payload);
-            // ac.setGrants();
-            // console.log("get access list", access);
-            const role_name = req.query.role as string;
+            console.log(access);
             const ac = new AccessControl(access.grantList);
-            const permissions = ac.can("admin");
+            const permissions = ac.can(access.role_name);
             const isPermitted = permissions[action as keyof typeof permissions](
                 resource
             ) as Permission;

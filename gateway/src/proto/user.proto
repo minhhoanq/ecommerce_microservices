@@ -178,4 +178,5 @@ message GetAccess {
 
 message GrantList {
     repeated GetAccess grantList = 1;
+    string role_name = 2;
 }
