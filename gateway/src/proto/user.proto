@@ -10,6 +10,13 @@ service UserService {
     rpc GetSessionUser(SessionRequest) returns (Session) {}
 
     rpc DecodeToken(TokenRequest) returns (decode) {}
+
+    //admin
+    rpc CreateRole(RoleReq) returns (Role) {}
+    rpc CreateResource(ResourceReq) returns (Resource) {}
+    rpc CreateRoleResource(RoleResource) returns (RoleResource) {}
+
+    rpc GetAccess(GetAccessReq) returns (GrantList) {}
 }
 
 message Emty {}
@@ -122,4 +129,53 @@ message decode {
     string email = 3;
     int32 iat = 4;
     int32 exp = 5;
+}
+
+message RoleReq {
+    string name = 1;
+}
+
+message Role {
+    int32 id = 1;
+    string name = 2;
+    string created_at = 3;
+    string updated_at = 4;
+}
+
+message ResourceReq {
+    string name = 1;
+    string slug = 2;
+    string desc = 3;
+}
+
+message Resource {
+    int32 id = 1;
+    string name = 2;
+    string slug = 3;
+    string desc = 4;
+    string created_at = 5;
+    string updated_at = 6;
+}
+
+message RoleResource {
+    int32 role_id = 1;
+    int32 resource_id = 2;
+    string action = 3;
+    string attributes = 4;
+}
+
+message GetAccessReq {
+    int32 role_id = 1;
+    string resource = 2;
+}
+
+message GetAccess {
+    string role = 1;
+    string resource = 2;
+    string action = 3;
+    string attributes = 4;
+}
+
+message GrantList {
+    repeated GetAccess grantList = 1;
 }
