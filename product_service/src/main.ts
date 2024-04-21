@@ -15,14 +15,11 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 });
 
 const productProto: any = grpc.loadPackageDefinition(packageDefinition);
-
 const server = new grpc.Server();
-
 server.addService(
     productProto.ProductService.service,
     ProductHandlerFatory.productHandlers()
 );
-
 server.bindAsync(
     `127.0.0.1:${process.env.PORT_GRPC}`,
     grpc.ServerCredentials.createInsecure(),
