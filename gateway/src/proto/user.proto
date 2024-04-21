@@ -32,9 +32,10 @@ message UserRegister {
     string last_name = 4;
     string sex = 5;
     string date_of_birth = 6;
-    string avatar = 7;
-    string client_agent = 8;
-    string client_ip = 9;
+    int32 role_id = 7;
+    string avatar = 8;
+    string client_agent = 9;
+    string client_ip = 10;
 }
 
 message UserPayloadResponse {
