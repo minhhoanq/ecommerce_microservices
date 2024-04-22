@@ -2,8 +2,13 @@ syntax = "proto3";
 
 service ProductService {
     rpc CreateProduct(ProductCreateRequest) returns (ProductCreateResponse) {}
-
+    rpc GetAllProduct(ProductGetRequest) returns (ProductGetResponse) {}
+    rpc UpdateProduct(ProductUpdateRequest) returns (ProductUpdateResponse) {}
+    rpc PublishProductByShop(ProductPublishReq) returns (ProductPublishRes) {}
+    rpc UnPublishProductByShop(UnProductPublishReq) returns (UnProductPublishRes) {}
 }
+
+message Empty {}
 
 message ProductCreateRequest {
     string product_name = 1;
@@ -32,4 +37,55 @@ message ProductCreateResponse {
     string product_thumb = 7;
     int32 product_quantity = 8;
     ProductAttributes product_attributes = 9;
+}
+
+message ProductGetRequest {
+    int32 limit = 1;
+    int32 page = 2;
+}
+
+message ProductGetResponse {
+    repeated ProductCreateResponse products = 1;
+}
+
+message ProductUpdateRequest {
+    string product_id = 1;
+    string product_name = 2;
+    string product_desc = 3;
+    string product_price = 4;
+    string product_type = 5;
+    string product_thumb = 6;
+    int32 product_quantity = 7;
+    ProductAttributes product_attributes = 8;
+    int32 product_shop = 9;
+}
+
+message ProductUpdateResponse {
+    string _id = 1;
+    int32 product_shop = 2;
+    string product_name = 3;
+    string product_desc = 4;
+    string product_price = 5;
+    string product_type = 6;
+    string product_thumb = 7;
+    int32 product_quantity = 8;
+    ProductAttributes product_attributes = 9;
+}
+
+message ProductPublishReq {
+    string product_id = 1;
+    int32 product_shop = 2;
+}
+
+message ProductPublishRes {
+    int32 result = 1;
+}
+
+message UnProductPublishReq {
+    string product_id = 1;
+    int32 product_shop = 2;
+}
+
+message UnProductPublishRes {
+    int32 result = 1;
 }

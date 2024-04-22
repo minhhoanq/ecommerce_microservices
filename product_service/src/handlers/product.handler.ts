@@ -1,4 +1,9 @@
-import { GetAllProduct, UpdateProduct } from "../dto/product.dto";
+import {
+    GetAllProduct,
+    PubLishProductByShop,
+    UnPubLishProductByShop,
+    UpdateProduct,
+} from "../dto/product.dto";
 import { ProductFactory } from "../services/product.service";
 import { RequestValidator } from "../utils/request.validator";
 import { status, sendUnaryData } from "@grpc/grpc-js";
@@ -92,6 +97,59 @@ export class ProductHandlerFatory {
                         data
                     );
                     callback(null, updateProduct);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+
+            PublishProductByShop: async (call: any, callback: any) => {
+                try {
+                    const payload = call.request;
+                    console.log(payload);
+                    const { errors, input } = await RequestValidator(
+                        PubLishProductByShop,
+                        payload
+                    );
+                    if (errors) {
+                        callback({
+                            code: status.INVALID_ARGUMENT,
+                            message: "Invalid input data",
+                            details: errors,
+                        });
+                    }
+                    const publishProductByShop =
+                        await ProductFactory.publishProductByShop(
+                            input.product_id,
+                            input.product_shop
+                        );
+                    callback(null, publishProductByShop);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+
+            UnPublishProductByShop: async (call: any, callback: any) => {
+                try {
+                    const payload = call.request;
+                    console.log(payload);
+                    const { errors, input } = await RequestValidator(
+                        UnPubLishProductByShop,
+                        payload
+                    );
+                    if (errors) {
+                        callback({
+                            code: status.INVALID_ARGUMENT,
+                            message: "Invalid input data",
+                            details: errors,
+                        });
+                    }
+                    const unPublishProductByShop =
+                        await ProductFactory.unPublishProductByShop(
+                            input.product_id,
+                            input.product_shop
+                        );
+                    console.log(unPublishProductByShop);
+                    callback(null, unPublishProductByShop);
                 } catch (error) {
                     this.handlerError(error, callback);
                 }

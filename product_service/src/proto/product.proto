@@ -4,7 +4,11 @@ service ProductService {
     rpc CreateProduct(ProductCreateRequest) returns (ProductCreateResponse) {}
     rpc GetAllProduct(ProductGetRequest) returns (ProductGetResponse) {}
     rpc UpdateProduct(ProductUpdateRequest) returns (ProductUpdateResponse) {}
+    rpc PublishProductByShop(ProductPublishReq) returns (ProductPublishRes) {}
+    rpc UnPublishProductByShop(UnProductPublishReq) returns (UnProductPublishRes) {}
 }
+
+message Empty {}
 
 message ProductCreateRequest {
     string product_name = 1;
@@ -66,4 +70,22 @@ message ProductUpdateResponse {
     string product_thumb = 7;
     int32 product_quantity = 8;
     ProductAttributes product_attributes = 9;
+}
+
+message ProductPublishReq {
+    string product_id = 1;
+    int32 product_shop = 2;
+}
+
+message ProductPublishRes {
+    int32 result = 1;
+}
+
+message UnProductPublishReq {
+    string product_id = 1;
+    int32 product_shop = 2;
+}
+
+message UnProductPublishRes {
+    int32 result = 1;
 }

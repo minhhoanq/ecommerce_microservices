@@ -1,4 +1,4 @@
-import { IsNumber, IsObject, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsObject, IsString } from "class-validator";
 
 export class GetAllProduct {
     @IsNumber()
@@ -26,4 +26,24 @@ export class UpdateProduct {
 
     // // @IsObject()
     // product_attributes?: any;
+}
+
+export class PubLishProductByShop {
+    @IsNotEmpty()
+    @IsString()
+    product_id: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    product_shop: number;
+}
+
+export class UnPubLishProductByShop {
+    @IsNotEmpty()
+    @IsString()
+    product_id: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    product_shop: number;
 }
