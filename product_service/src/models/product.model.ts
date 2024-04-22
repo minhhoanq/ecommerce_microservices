@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { product } from "../database/schemas/product.schema";
 import { insertInventory } from "../database/repositories/inventory_repo";
+import { updateProductById } from "../database/repositories/product.repo";
 
 export class Product {
     product_name: string;
@@ -44,5 +45,10 @@ export class Product {
             });
         }
         return newProduct;
+    }
+
+    async update(product_id: string, payload: any) {
+        console.log("Product Model", product_id, payload);
+        return updateProductById(product_id, payload, product);
     }
 }
