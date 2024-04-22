@@ -20,6 +20,10 @@ service UserService {
 
     //shop
     rpc RegisterShop(RegisterShopReq) returns (RegisterShopRes) {}
+
+    //follow
+    rpc FollowShop(FollowShopReq) returns (FollowShopRes) {}
+    rpc GetShopFollowerList(GetShopFollowerListReq) returns (GetShopFollowerListRes) {}
 }
 
 message Emty {}
@@ -201,4 +205,42 @@ message UserShopRes {
 message RegisterShopRes {
     UserShopRes user = 1;
     Tokens tokens = 2;
+}
+
+message FollowShopReq {
+    int32 user_id = 1;
+    int32 shop_id = 2;
+}
+
+message FollowShopRes {
+    int32 id = 1;
+    int32 user_id = 2;
+    int32 shop_id = 3;
+    int32 createdAt = 4;
+    int32 updatedAt = 5;
+}
+
+message GetShopFollowerListReq {
+    int32 shop_id = 1;
+}
+
+message UserFormFollower {
+    int32 id = 1;
+    string fisrt_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string avatar = 5;
+}
+
+message GetShopFollowerRes {
+    int32 id = 1;
+    int32 user_id = 2;
+    int32 shop_id = 3;
+    int32 createdAt = 4;
+    int32 updatedAt = 5;
+    UserFormFollower user = 6;
+}
+
+message GetShopFollowerListRes {
+    repeated GetShopFollowerRes followers = 1;
 }

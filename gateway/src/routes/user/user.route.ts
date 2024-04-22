@@ -71,7 +71,7 @@ router.post("/refresh", new auth().authentication, (req, res) => {
     });
 });
 
-//router
+//shop
 router.post(
     "/register/shop",
     new auth().authentication,
@@ -87,5 +87,31 @@ router.post(
         });
     }
 );
+
+//follow
+router.post(
+    "/follow",
+    new auth().authentication,
+    (req: Request, res: Response) => {
+        const payload = {
+            user_id: req.user.user_id,
+            shop_id: req.body.shop_id,
+        };
+        clientUser.FollowShop(payload, (err: any, data: any) => {
+            if (err) return res.status(500).send(err);
+            return res.status(200).json(data);
+        });
+    }
+);
+
+router.get("/:shopId/followers", (req: Request, res: Response) => {
+    const payload = {
+        shop_id: req.params.shopId,
+    };
+    clientUser.GetShopFollowerList(payload, (err: any, data: any) => {
+        if (err) return res.status(500).send(err);
+        return res.status(200).json(data);
+    });
+});
 
 export default router;

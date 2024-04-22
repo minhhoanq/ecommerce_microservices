@@ -86,7 +86,7 @@ export class UserService {
                 newUser.id,
                 newUser.role_id,
                 newUser.email,
-                1,
+                0,
                 public_key,
                 private_key
             );
@@ -118,7 +118,7 @@ export class UserService {
 
         return null;
     }
-
+    //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJyb2xlX2lkIjoyLCJlbWFpbCI6ImhvYW5nMkBnbWFpbC5jb20iLCJzaG9wX2lkIjo5LCJpYXQiOjE3MTM3ODc0MjgsImV4cCI6MTcxMzk2MDIyOH0.Rh5eo5rJZTjhwENUdJos8l7V5xWP9pRIR96Uu_KX2zg
     async login(user: LoginUser, client_ip: any, client_agent: any) {
         const userExists = await this._prisma.user.findUnique({
             where: {
@@ -135,6 +135,12 @@ export class UserService {
         );
         if (!match) throw new Error("Invalid password!");
 
+        const shopExists = await this._prisma.shop.findFirst({
+            where: {
+                user_id: userExists.id,
+            },
+        });
+
         const public_key = crypto.randomBytes(64).toString("hex");
         const private_key = crypto.randomBytes(64).toString("hex");
 
@@ -142,7 +148,7 @@ export class UserService {
             userExists.id,
             userExists.role_id,
             userExists.email,
-            1,
+            shopExists?.id || 0,
             public_key,
             private_key
         );
@@ -348,6 +354,59 @@ export class UserService {
                 shop_id: newShop.id,
             },
             tokens,
+        };
+    }
+
+    //follow
+    async followShop(user_id: number, shop_id: number) {
+        const shop = await this._prisma.shop.findFirst({
+            where: {
+                id: shop_id,
+            },
+        });
+
+        if (!shop) throw new Error(`Shop not found`);
+
+        if (user_id === shop?.user_id)
+            throw new Error("You can't follow your own shop");
+
+        const followExists = await this._prisma.follow.findFirst({
+            where: {
+                user_id: user_id,
+                shop_id: shop_id,
+            },
+        });
+
+        if (followExists) throw new Error(`You have followed this shop!`);
+        const follow = await this._prisma.follow.create({
+            data: {
+                user_id: user_id,
+                shop_id: shop_id,
+            },
+        });
+
+        return follow;
+    }
+
+    async getShopFollowerList(shop_id: number) {
+        return {
+            followers: await this._prisma.follow.findMany({
+                where: {
+                    shop_id: shop_id,
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            first_name: true,
+                            last_name: true,
+                            email: true,
+                            avatar: true,
+                            sex: true,
+                        },
+                    },
+                },
+            }),
         };
     }
 }

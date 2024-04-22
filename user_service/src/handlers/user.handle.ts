@@ -237,6 +237,7 @@ export class UserHandlerFactory {
                 }
             },
 
+            //Shop
             RegisterShop: async (call: any, callback: any) => {
                 try {
                     const { session, ...data } = call.request;
@@ -247,6 +248,33 @@ export class UserHandlerFactory {
                     );
                     console.log(registerShop);
                     callback(null, registerShop);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+
+            //Follow
+            FollowShop: async (call: any, callback: any) => {
+                try {
+                    const { user_id, shop_id } = call.request;
+                    const followShop = await userService.followShop(
+                        user_id,
+                        shop_id
+                    );
+                    console.log(followShop);
+                    callback(null, followShop);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+
+            GetShopFollowerList: async (call: any, callback: any) => {
+                try {
+                    const { shop_id } = call.request;
+                    const shopFollowerList: any =
+                        await userService.getShopFollowerList(shop_id);
+                    console.log(shopFollowerList);
+                    callback(null, shopFollowerList);
                 } catch (error) {
                     this.handlerError(error, callback);
                 }
