@@ -89,6 +89,7 @@ export class UserHandlerFactory {
             LogoutUser: async (call: any, callback: any) => {
                 try {
                     const session = call.request;
+                    console.log("session user handler", session);
                     const { errors, input } = await RequestValidator(
                         SessionUser,
                         session
@@ -231,6 +232,21 @@ export class UserHandlerFactory {
                     );
                     console.log(accessList);
                     callback(null, accessList);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+
+            RegisterShop: async (call: any, callback: any) => {
+                try {
+                    const { session, ...data } = call.request;
+                    console.log(call.request);
+                    const registerShop = await userService.registerShop(
+                        data,
+                        session
+                    );
+                    console.log(registerShop);
+                    callback(null, registerShop);
                 } catch (error) {
                     this.handlerError(error, callback);
                 }

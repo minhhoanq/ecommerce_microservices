@@ -17,6 +17,9 @@ service UserService {
     rpc CreateRoleResource(RoleResource) returns (RoleResource) {}
 
     rpc GetAccess(GetAccessReq) returns (GrantList) {}
+
+    //shop
+    rpc RegisterShop(RegisterShopReq) returns (RegisterShopRes) {}
 }
 
 message Emty {}
@@ -180,4 +183,22 @@ message GetAccess {
 message GrantList {
     repeated GetAccess grantList = 1;
     string role_name = 2;
+}
+
+//shop
+message RegisterShopReq {
+    int32 user_id = 1;
+    string name = 2;
+    Session session = 3;
+}
+
+message UserShopRes {
+    int32 user_id = 1;
+    string email = 2;
+    int32 shop_id = 3;
+}
+
+message RegisterShopRes {
+    UserShopRes user = 1;
+    Tokens tokens = 2;
 }

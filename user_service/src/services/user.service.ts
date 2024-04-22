@@ -25,10 +25,11 @@ export class UserService {
         user_id: number,
         role_id: number,
         email: string,
+        shop_id: number,
         public_key: string,
         private_key: string
     ) {
-        const payload = { user_id, role_id, email };
+        const payload = { user_id, role_id, email, shop_id };
         const access_token = await JWT.sign(payload, public_key, {
             expiresIn: "2 days",
         });
@@ -53,6 +54,7 @@ export class UserService {
             sex,
             avatar,
             date_of_birth,
+            role_id,
         } = data;
         const userExists = await this._prisma.user.findUnique({
             where: {
@@ -72,6 +74,7 @@ export class UserService {
                 sex: sex,
                 avatar: avatar,
                 date_of_birth: date_of_birth,
+                role_id: role_id,
             },
         });
 
@@ -83,6 +86,7 @@ export class UserService {
                 newUser.id,
                 newUser.role_id,
                 newUser.email,
+                1,
                 public_key,
                 private_key
             );
@@ -138,6 +142,7 @@ export class UserService {
             userExists.id,
             userExists.role_id,
             userExists.email,
+            1,
             public_key,
             private_key
         );
@@ -176,6 +181,8 @@ export class UserService {
             });
         }
 
+        console.log("session user service: ", session);
+
         if (!session) throw new Error("Error: session");
 
         return {
@@ -193,6 +200,7 @@ export class UserService {
                 id: session.id,
             },
         });
+        console.log(delSession);
         if (delSession) {
             return true;
         }
@@ -223,6 +231,7 @@ export class UserService {
             user_id,
             role_id,
             email,
+            1,
             session.public_key,
             session.private_key
         );
@@ -276,5 +285,69 @@ export class UserService {
                 client_ip: client_ip,
             },
         });
+    }
+
+    async registerShop(data: any, session: any): Promise<any> {
+        const { user_id, name } = data;
+        const shopExists = await this._prisma.shop.findFirst({
+            where: {
+                user_id: user_id,
+            },
+        });
+        if (shopExists) throw new Error("You registered a shop!");
+
+        const updateUser = await this._prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                role_id: 2,
+            },
+        });
+        console.log("updateUser", updateUser);
+        if (!updateUser) {
+            throw new Error("Register Shop Failed!");
+        }
+
+        const newShop = await this._prisma.shop.create({
+            data: {
+                user_id: user_id,
+                name: name,
+            },
+        });
+        console.log("qua day ko", newShop);
+        console.log("session", session);
+        const tokens = await this.createTokenPair(
+            updateUser.id,
+            updateUser.role_id,
+            updateUser.email,
+            newShop.id,
+            session.public_key,
+            session.private_key
+        );
+        console.log("quua day ko vay");
+        console.log("tokens", tokens);
+
+        const sessionUpdate = await this._prisma.session.update({
+            where: {
+                id: session.id,
+            },
+            data: {
+                expired_at: 604800,
+                refresh_token: tokens.refresh_token,
+            },
+        });
+        console.log("day thi sao");
+        if (!sessionUpdate) {
+            throw new Error("Unable to create session");
+        }
+        return {
+            user: {
+                user_id: updateUser.id,
+                email: updateUser.email,
+                shop_id: newShop.id,
+            },
+            tokens,
+        };
     }
 }
