@@ -3,6 +3,7 @@ import JWT from "jsonwebtoken";
 interface AccessTokenData {
     user_id: number;
     role_id: number;
+    shop_id: number;
     email: string;
 }
 

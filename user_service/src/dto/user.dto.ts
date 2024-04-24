@@ -29,6 +29,9 @@ export class RegisterUser {
 
     @IsNotEmpty()
     date_of_birth: string;
+
+    @IsNumber()
+    role_id?: number;
 }
 
 export class LoginUser {
@@ -56,15 +59,15 @@ export class SessionUser {
 
     @IsNotEmpty()
     @IsString()
-    client_id: string;
+    client_ip: string;
 
     @IsNotEmpty()
     @IsString()
     client_agent: string;
 
     @IsNotEmpty()
-    @IsBoolean()
-    is_block: boolean;
+    // @IsBoolean()
+    is_block: string;
 
     @IsNotEmpty()
     @IsString()
@@ -75,14 +78,6 @@ export class SessionUser {
     public_key: string;
 
     @IsNotEmpty()
-    @IsNumber()
-    expired_at: number;
-
-    @IsNotEmpty()
-    @IsString()
-    created_at?: string;
-
-    @IsNotEmpty()
-    @IsString()
-    updated_at?: string;
+    // @IsNumber()
+    expired_at: string;
 }
