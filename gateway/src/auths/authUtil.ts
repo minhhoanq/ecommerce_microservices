@@ -54,6 +54,7 @@ export class auth {
         );
 
         const session = await getSessionUserAsync(payload);
+
         console.log(session);
 
         if (!session) return res.json(new Error(`Not found session`));
