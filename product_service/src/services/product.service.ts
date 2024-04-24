@@ -1,4 +1,9 @@
-import { getAllProduct } from "../database/repositories/product.repo";
+import {
+    getAllProduct,
+    publishProductByShop,
+    queryProduct,
+    unPublishProductByShop,
+} from "../database/repositories/product.repo";
 import { Clothing } from "../models/clothing.model";
 
 type ProductRegistry = typeof Clothing;
@@ -38,6 +43,34 @@ export class ProductFactory {
         const productClass = ProductFactory.productRegistry[type];
         if (!productClass) throw new Error(`Product ${type} not found`);
         return new productClass(payload).update(product_id);
+    }
+
+    static async publishProductByShop(
+        product_id: string,
+        product_shop: number
+    ) {
+        return await publishProductByShop(product_id, product_shop);
+    }
+
+    static async unPublishProductByShop(
+        product_id: string,
+        product_shop: number
+    ) {
+        return await unPublishProductByShop(product_id, product_shop);
+    }
+
+    static async getAllPublishProductsForShop(
+        product_shop: number,
+        limit: number,
+        page: number
+    ): Promise<any> {
+        const query = {
+            product_shop: product_shop,
+            is_published: true,
+        };
+        const data = await queryProduct(query, limit, page);
+        console.log("data", data);
+        return { data: data };
     }
 }
 

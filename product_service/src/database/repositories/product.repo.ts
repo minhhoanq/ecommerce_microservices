@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { getSelectData } from "../../utils/helper.mongodb";
+import { getSelectData, unGetSelectData } from "../../utils/helper.mongodb";
 import { product } from "../schemas/product.schema";
 
 export const getAllProduct = async (
@@ -42,13 +42,15 @@ export const publishProductByShop = async (
 
     if (!foundShop) throw new Error("Product is not exists!");
 
-    foundShop.is_draft = false;
-    foundShop.is_published = true;
+    const update = await product
+        .findByIdAndUpdate(foundShop._id, {
+            is_draft: false,
+            is_published: true,
+        })
+        .select(getSelectData(["_id", "product_name", "product_shop"]));
+    console.log("update", update);
 
-    const { modifiedCount } = await foundShop.updateOne(foundShop);
-    console.log("modifiedCount", modifiedCount);
-
-    return { result: modifiedCount };
+    return update;
 };
 
 export const unPublishProductByShop = async (
@@ -65,4 +67,16 @@ export const unPublishProductByShop = async (
     const { modifiedCount } = await foundShop.updateOne(foundShop);
 
     return { result: modifiedCount };
+};
+
+export const queryProduct = async (query: any, limit: number, page: number) => {
+    console.log(`queryProduct`, query);
+    const skip = (page - 1) * limit;
+    return await product
+        .find(query)
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec();
 };

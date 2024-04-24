@@ -120,8 +120,9 @@ export class ProductHandlerFatory {
                     const publishProductByShop =
                         await ProductFactory.publishProductByShop(
                             input.product_id,
-                            input.product_shop
+                            Number(input.product_shop)
                         );
+                    console.log(publishProductByShop);
                     callback(null, publishProductByShop);
                 } catch (error) {
                     this.handlerError(error, callback);
@@ -150,6 +151,24 @@ export class ProductHandlerFatory {
                         );
                     console.log(unPublishProductByShop);
                     callback(null, unPublishProductByShop);
+                } catch (error) {
+                    this.handlerError(error, callback);
+                }
+            },
+            GetAllPublishProductsForShop: async (
+                call: any,
+                callback: any
+            ): Promise<any> => {
+                try {
+                    const payload = call.request;
+                    const getAllPublishProductsByShop =
+                        await ProductFactory.getAllPublishProductsForShop(
+                            payload.product_shop,
+                            payload.limit,
+                            payload.page
+                        );
+
+                    callback(null, getAllPublishProductsByShop);
                 } catch (error) {
                     this.handlerError(error, callback);
                 }

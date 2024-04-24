@@ -6,6 +6,7 @@ service ProductService {
     rpc UpdateProduct(ProductUpdateRequest) returns (ProductUpdateResponse) {}
     rpc PublishProductByShop(ProductPublishReq) returns (ProductPublishRes) {}
     rpc UnPublishProductByShop(UnProductPublishReq) returns (UnProductPublishRes) {}
+    rpc GetAllPublishProductsForShop(GetAllPublishProductsForShopReq) returns (GetAllPublishProductsForShopResArray) {}
 }
 
 message Empty {}
@@ -78,7 +79,9 @@ message ProductPublishReq {
 }
 
 message ProductPublishRes {
-    int32 result = 1;
+    string _id = 1;
+    string product_name = 2;
+    int32 product_shop = 3;
 }
 
 message UnProductPublishReq {
@@ -88,4 +91,26 @@ message UnProductPublishReq {
 
 message UnProductPublishRes {
     int32 result = 1;
+}
+
+message GetAllPublishProductsForShopReq {
+    int32 product_shop = 1;
+    int32 limit = 2;
+    int32 page = 3;
+}
+
+message GetAllPublishProductsForShopRes {
+    string product_id = 1;
+    string product_name = 2;
+    string product_desc = 3;
+    string product_price = 4;
+    string product_type = 5;
+    string product_thumb = 6;
+    int32 product_quantity = 7;
+    ProductAttributes product_attributes = 8;
+    int32 product_shop = 9;
+}
+
+message GetAllPublishProductsForShopResArray {
+    GetAllPublishProductsForShopRes data = 1;
 }
