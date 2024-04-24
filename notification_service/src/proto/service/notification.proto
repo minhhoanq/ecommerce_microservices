@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+service NotificationService {
+    rpc TestConnection(Empty) returns (Empty) {}
+}
+
+message Empty {}
