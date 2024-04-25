@@ -1,0 +1,108 @@
+version: "3.8"
+services:
+    prisma:
+        image: prismagraphql/prisma:1.8
+        restart: always
+        ports:
+            - "4466:4466"
+        environment:
+            PRISMA_CONFIG: |
+                port: 4466
+                databases:
+                    default:
+                        connector: postgres
+                        host: postgres
+                        port: 5432
+                        user: user_db
+                        password: user_db_pw
+
+    user_db_pgsql:
+        image: postgres:latest
+        container_name: user_db_pgsql
+        ports:
+            - "5435:5432"
+        environment:
+            - POSTGRES_USER=user_db
+            - POSTGRES_PASSWORD=user_db_pw
+            - POSTGRES_DB=user_service
+        volumes:
+            - ./db-data/postgres/:/var/lib/postgresql/data
+
+    nosql-db:
+        image: mongo:latest
+        container_name: nosql-db
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./db-data/:/data/db
+
+    redis:
+        image: redis:latest
+        container_name: redis_db
+        ports:
+            - "6379:63379"
+        volumes:
+            - ./db-data/redis/:/var/lib/redis/data
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+
+    # gateway:
+    #     build:
+    #         dockerfile: Dockerfile
+    #         context: ./gateway
+    #     container_name: gateway
+    #     ports:
+    #         - "8080:8080"
+    #     depends_on:
+    #         - "rabbitmq"
+    #         - "redis"
+    #     volumes:
+    #         - .:/app
+    #         - /app/gateway/node_modules
+
+    # user_service:
+    #     build:
+    #         dockerfile: Dockerfile
+    #         context: ./user_service
+    #     container_name: user_service
+    #     ports:
+    #         - "30043:30043"
+    #     depends_on:
+    #         - "rabbitmq"
+    #         - "redis"
+    #     volumes:
+    #         - .:/app
+    #         - /app/user_service/node_modules
+
+    # product_service:
+    #     build:
+    #         dockerfile: Dockerfile
+    #         context: ./product_service
+    #     container_name: product_service
+    #     ports:
+    #         - "30044:30044"
+    #     depends_on:
+    #         - "rabbitmq"
+    #         - "redis"
+    #     volumes:
+    #         - .:/app
+    #         - /app/product_service/node_modules
+
+    # notification_service:
+    #     build:
+    #         dockerfile: Dockerfile
+    #         context: ./notification_service
+    #     container_name: notification_service
+    #     ports:
+    #         - "30045:30045"
+    #     depends_on:
+    #         - "rabbitmq"
+    #         - "redis"
+    #     volumes:
+    #         - .:/app
+    #         - /app/notification_service/node_modules
