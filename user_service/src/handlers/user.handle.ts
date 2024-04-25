@@ -7,15 +7,18 @@ import { RoleService } from "../services/role.service";
 import { ResourceService } from "../services/resource.service";
 import { RbacService } from "../services/rbac.service";
 import { RequestValidator } from "../utils/request.validator";
-import { statusCode } from "../utils/httpStatusCode";
+import { RPCObserver } from "../utils/rabbitmq";
+require("dotenv").config();
 
-export const userService = new UserService(new UserRepository());
+export const userService = new UserService();
 export const roleService = new RoleService();
 export const resourceService = new ResourceService();
 export const rbacService = new RbacService();
 
 export class UserHandlerFactory {
-    public static userHandlers(): any {
+    public static userHandlers() {
+        // const channel = await setupChannel();
+        RPCObserver(process.env.USER_FOLLOWERS_RPC || "", UserService);
         const handle = {
             GetUsers: async (call: any, callback: any) => {
                 const users = await userService.getUsers();
@@ -141,6 +144,7 @@ export class UserHandlerFactory {
                 callback: (_: any, callback: any) => void
             ) => {
                 try {
+                    console.log("chceeciujaouaowia");
                     console.log(call.request);
                     const { email, client_agent, client_ip } = call.request;
                     console.log("email1 ", email);
@@ -149,7 +153,7 @@ export class UserHandlerFactory {
                         client_agent,
                         client_ip
                     );
-                    // console.log(session);
+                    console.log(session);
                     callback(null, session);
                 } catch (error) {
                     this.handlerError(error, callback);

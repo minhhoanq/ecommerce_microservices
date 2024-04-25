@@ -8,8 +8,7 @@ import JWT from "jsonwebtoken";
 export class UserService {
     private _repo: IUserRepo;
     _prisma: PrismaClient;
-    constructor(repository: IUserRepo) {
-        this._repo = repository;
+    constructor() {
         this._prisma = new PrismaClient();
     }
 
@@ -388,25 +387,38 @@ export class UserService {
         return follow;
     }
 
-    async getShopFollowerList(shop_id: number) {
-        return {
-            followers: await this._prisma.follow.findMany({
-                where: {
-                    shop_id: shop_id,
-                },
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            first_name: true,
-                            last_name: true,
-                            email: true,
-                            avatar: true,
-                            sex: true,
-                        },
+    async getShopFollowerList(data: any) {
+        const { shop_id } = data;
+        return await this._prisma.follow.findMany({
+            where: {
+                shop_id: shop_id,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        first_name: true,
+                        last_name: true,
+                        email: true,
+                        avatar: true,
+                        sex: true,
                     },
                 },
-            }),
-        };
+            },
+        });
+    }
+
+    static async SubscribeEvents(payload: any) {
+        // payload = JSON.parse(payload);
+        const { event, data } = payload;
+        console.log("payload: ", payload);
+        switch (event) {
+            case "GET_SHOP_FOLLOWERS":
+                return new UserService().getShopFollowerList(data);
+            // break;
+
+            default:
+                break;
+        }
     }
 }
