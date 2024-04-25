@@ -1,5 +1,6 @@
 const PROTO_PATH_USER = "./src/proto/user.proto";
 const PROTO_PATH_PRODUCT = "./src/proto/product.proto";
+const PROTO_PATH_NOTIFICATION = "./src/proto/notification.proto";
 require("dotenv").config();
 
 import * as grpc from "@grpc/grpc-js";
@@ -20,6 +21,12 @@ function startHTTPServer(proto_path: any, port_grpc: number, type: any) {
             break;
         case "UserService":
             Service = grpc.loadPackageDefinition(packageDefinition).UserService;
+            break;
+        case "NotificationService":
+            Service =
+                grpc.loadPackageDefinition(
+                    packageDefinition
+                ).NotificationService;
             break;
         default:
             break;
@@ -43,4 +50,10 @@ const clientProduct = startHTTPServer(
     "ProductService"
 );
 
-export { clientUser, clientProduct };
+const clientNotification = startHTTPServer(
+    PROTO_PATH_NOTIFICATION,
+    Number(process.env.PORT_GRPC_NOTIFICATION),
+    "NotificationService"
+);
+
+export { clientUser, clientProduct, clientNotification };
