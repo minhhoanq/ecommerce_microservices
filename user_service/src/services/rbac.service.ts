@@ -35,7 +35,7 @@ export class RbacService {
             },
         });
         const resource_id = resourceResult?.id;
-        const access = await this._prisma.role_Resource.findMany({
+        const access: any[] = await this._prisma.role_Resource.findMany({
             include: {
                 role: true,
                 resource: true,
