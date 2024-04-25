@@ -4,7 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon src/main.ts"
+        "dev": "nodemon src/main.ts",
+        "start": "node dist/main.js",
+        "build": "npx tsc -p .",
+        "test": "jest"
     },
     "keywords": [],
     "author": "",

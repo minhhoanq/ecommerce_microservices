@@ -5,6 +5,9 @@
     "main": "index.js",
     "scripts": {
         "dev": "nodemon src/main.ts",
+        "start": "node dist/main.js",
+        "build": "npx tsc -p .",
+        "test": "jest",
         "generate": "npx proto-loader-gen-types --longs=Number --enums=Number --oneofs --grpcLib=@grpc/grpc-js --outDir=src/proto/gen src/proto/service/notification.proto"
     },
     "keywords": [],
